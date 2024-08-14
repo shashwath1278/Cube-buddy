@@ -1,0 +1,245 @@
+Page 1 (login screen)
+import SwiftUI
+
+struct CreateAccountView: View {
+    @State private var email = ""
+    @State private var password = ""
+    @State private var reenterPassword = ""
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Cube Buddy")
+                .font(.largeTitle)
+                .padding(.bottom, 20)
+            
+            Image(systemName: "cube.fill")
+                .resizable()
+                .frame(width: 100, height: 100)
+                .padding(.bottom, 20)
+            
+            TextField("Email", text: $email)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.horizontal)
+            
+            SecureField("Password", text: $password)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.horizontal)
+            
+            SecureField("Reenter Password", text: $reenterPassword)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding(.horizontal)
+            
+            Button(action: {
+                // Action for creating account
+            }) {
+                Text("Create Account")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+            .padding(.horizontal)
+            
+            Button(action: {
+                // Action for logging in
+            }) {
+                Text("Log in")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.green)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+            .padding(.horizontal)
+            
+            Spacer()
+        }
+        .padding()
+    }
+}
+
+
+Page 2 
+import SwiftUI
+
+struct CubeBuddyView: View {
+    let cubes = [
+        ("3×3 Rubik's cube", "cube_3x3"),
+        ("2×2 Rubik's cube", "cube_2x2"),
+        ("4×4 Rubik's cube", "cube_4x4"),
+        ("Pyraminx cube", "cube_pyraminx"),
+        ("Megaminx cube", "cube_megaminx"),
+        ("3×3 Mirror cube", "cube_mirror"),
+        ("Mastermorphix cube", "cube_mastermorphix")
+    ]
+    
+    var body: some View {
+        NavigationView {
+            VStack {
+                Text("Choose your cube:")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.top, 20)
+                
+                List(cubes, id: \.0) { cube in
+                    NavigationLink(destination: CubeDetailView(cubeName: cube.0)) {
+                        HStack {
+                            Image(cube.1)
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                                .padding(.trailing, 10)
+                            Text(cube.0)
+                                .font(.headline)
+                        }
+                    }
+                }
+                .listStyle(PlainListStyle())
+                .background(Color("BackgroundColor")) // Set your background color
+            }
+            .navigationBarTitle("Cube buddy", displayMode: .inline)
+            .navigationBarItems(trailing: HStack(spacing: 10) {
+                Image(systemName: "ellipsis")
+            })
+        }
+    }
+}
+
+struct CubeDetailView: View {
+    let cubeName: String
+    
+    var body: some View {
+        Text("Details for \(cubeName)")
+            .font(.largeTitle)
+    }
+}
+
+struct CubeBuddyView_Previews: PreviewProvider {
+    static var previews: some View {
+        CubeBuddyView()
+    }
+}
+
+
+Page 3
+import SwiftUI
+
+struct CubeLevelSelectionView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("3×3 Rubik's cube")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.top, 20)
+            
+            Text("Choose your level:")
+                .font(.headline)
+                .padding(.top, 10)
+            
+            LevelButton(levelName: "Beginner", dots: 1)
+            LevelButton(levelName: "Intermediate", dots: 2)
+            LevelButton(levelName: "Advanced", dots: 3)
+            LevelButton(levelName: "Extra tips", dots: 0)
+            
+            Spacer()
+        }
+        .padding(.horizontal)
+        .navigationBarTitle("Cube buddy", displayMode: .inline)
+        .navigationBarItems(trailing: HStack(spacing: 10) {
+            Image(systemName: "ellipsis")
+        })
+    }
+}
+
+struct LevelButton: View {
+    var levelName: String
+    var dots: Int
+    
+    var body: some View {
+        HStack {
+            Text(levelName)
+                .font(.headline)
+                .foregroundColor(.black)
+            Spacer()
+            HStack(spacing: 8) {
+                ForEach(0..<dots, id: \.self) { _ in
+                    Circle()
+                        .fill(Color.gray)
+                        .frame(width: 15, height: 15)
+                }
+            }
+        }
+        .padding()
+        .background(Color.blue.opacity(0.2))
+        .cornerRadius(10)
+    }
+}
+
+struct CubeLevelSelectionView_Previews: PreviewProvider {
+    static var previews: some View {
+        CubeLevelSelectionView()
+    }
+}
+
+
+Page 4
+import SwiftUI
+
+struct ProgressTrackerView: View {
+    @State private var tutorialProgress = 2.0
+    @State private var youtubeProgress = 15.0
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text("3×3 Rubik's cube")
+                .font(.title)
+                .padding(.bottom, 10)
+            
+            Text("Beginner level")
+                .font(.headline)
+                .padding(.bottom, 10)
+            
+            ProgressRowView(title: "Tutorial lessons", progress: $tutorialProgress)
+            ProgressRowView(title: "Finger tricks", progress: .constant(0))
+            ProgressRowView(title: "Algorithm bank", progress: .constant(0))
+            ProgressRowView(title: "Youtube lessons", progress: $youtubeProgress)
+            ProgressRowView(title: "Pattern tricks", progress: .constant(0))
+            ProgressRowView(title: "Fun tricks", progress: $tutorialProgress)
+            
+            Spacer().frame(height: 20)
+            
+            Text("Others:")
+                .font(.headline)
+                .padding(.bottom, 10)
+            
+            HStack {
+                Image(systemName: "hourglass")
+                Text("Solve timer")
+            }
+            HStack {
+                Image(systemName: "cube.fill")
+                Text("Customize your cube")
+            }
+            HStack {
+                Image(systemName: "magnifyingglass")
+                Text("Analyze solves")
+            }
+            
+            Spacer()
+        }
+        .padding()
+    }
+}
+
+struct ProgressRowView: View {
+    let title: String
+    @Binding var progress: Double
+    
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            Text("\(Int(progress))% done")
+        }
+    }
+}
